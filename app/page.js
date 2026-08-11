@@ -157,7 +157,7 @@ export default function Dashboard() {
     <div style={{ backgroundColor: '#FDFBF7', minHeight: '100vh', padding: '24px', fontFamily: 'sans-serif', color: '#333' }}>
       
       {/* Header Profile Section */}
-      <div style={{ display: 'flex', justifyContent: 'between', alignItems: 'center', marginBottom: '24px', borderBottom: '1px solid #EAE6DF', paddingBottom: '16px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', borderBottom: '1px solid #EAE6DF', paddingBottom: '16px' }}>
         <div>
           <span style={{ fontSize: '12px', fontWeight: '600', color: '#888', textTransform: 'uppercase', letterSpacing: '1px' }}>Fulfillment · SLA · Store Performance</span>
           <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: '#111', marginTop: '4px' }}>AIVI Orders Efficiency</h1>
@@ -182,7 +182,7 @@ export default function Dashboard() {
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000 }}>
           <div style={{ backgroundColor: '#FFF', padding: '24px', borderRadius: '8px', width: '500px', maxHeight: '80vh', overflowY: 'auto', boxShadow: '0 4px 20px rgba(0,0,0,0.15)' }}>
             <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '8px' }}>Setup Column Mapping</h3>
-            <p style={{ fontSize: '13px', color: '#666', marginBottom: '16px' }}>সিস্টেমকে একবার চিনিয়ে দিন আপনার এক্সেল ফাইলের কোন কলাম কিসের ডেটা ধারণ করে।</p>
+            <p style={{ fontSize: '13px', color: '#666', marginBottom: '16px' }}>সিস্টেমকে একবার চিনিয়ে দিন আপনার এক্সেল ফাইলের কোন কলাম কিসের ডেটা ধারণ করে।</p>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {requiredFields.map(field => (
