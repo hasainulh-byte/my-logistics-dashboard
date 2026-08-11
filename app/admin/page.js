@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Shield, Users, Key, Save, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { Shield, Users, Key, Save, ArrowLeft, CheckCircle2, Sliders, Database, Eye } from 'lucide-react';
 import Link from 'next/link';
 
 export default function AdminConsole() {
@@ -10,15 +10,36 @@ export default function AdminConsole() {
     { id: 2, name: 'Logistics Analyst', email: 'analyst@aivi-ops.com', role: 'Viewer', status: 'Active' }
   ]);
 
+  // Master Fields Configuration Control
+  const masterColumns = [
+    { id: 'order_no', label: 'Order_No', status: 'Enabled' },
+    { id: 'shipment', label: 'Shipment', status: 'Enabled' },
+    { id: 'order_id', label: 'Order_id', status: 'Enabled' },
+    { id: 'order_date', label: 'Order Date', status: 'Enabled' },
+    { id: 'processed_date', label: 'Processed Date', status: 'Enabled' },
+    { id: 'handover_date', label: 'Handover Date', status: 'Enabled' },
+    { id: 'awb_no', label: 'AWB no', status: 'Enabled' },
+    { id: 'store_name', label: 'store name', status: 'Enabled' },
+    { id: 'origin_city', label: 'Origin city', status: 'Enabled' }
+  ];
+
   const [selectedRole, setSelectedRole] = useState('Super Admin');
   const [newEmail, setNewEmail] = useState('');
   const [saved, setSaved] = useState(false);
+  const [msg, setMsg] = useState('');
 
   const handleAddUser = (e) => {
     e.preventDefault();
     if (!newEmail) return;
     setUsers([...users, { id: Date.now(), name: newEmail.split('@')[0], email: newEmail, role: selectedRole, status: 'Active' }]);
     setNewEmail('');
+    setMsg('User access rights provisioned successfully!');
+    setSaved(true);
+    setTimeout(() => setSaved(false), 3000);
+  };
+
+  const handleSaveBlueprint = () => {
+    setMsg('Global Master Export Schema templates locked in database.');
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
   };
@@ -41,16 +62,34 @@ export default function AdminConsole() {
 
       {saved && (
         <div style={{ background: '#D1FAE5', color: '#065F46', padding: '12px', borderRadius: '6px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px' }}>
-          <CheckCircle2 size={18} /> User access rights updated successfully!
+          <CheckCircle2 size={18} /> {msg}
         </div>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '24px' }}>
+      {/* QUICK SYSTEM STATS */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '24px' }}>
+        <div style={{ background: '#FFF', padding: '16px', borderRadius: '8px', border: '1px solid #EAE6DF' }}>
+          <span style={{ fontSize: '11px', color: '#666', fontWeight: 'bold', textTransform: 'uppercase' }}>Database State</span>
+          <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#10B981', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Database size={16} /> Connected (27 Slots)
+          </div>
+        </div>
+        <div style={{ background: '#FFF', padding: '16px', borderRadius: '8px', border: '1px solid #EAE6DF' }}>
+          <span style={{ fontSize: '11px', color: '#666', fontWeight: 'bold', textTransform: 'uppercase' }}>Authorized Roles</span>
+          <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#111', marginTop: '4px' }}>3 Access Levels</div>
+        </div>
+        <div style={{ background: '#FFF', padding: '16px', borderRadius: '8px', border: '1px solid #EAE6DF' }}>
+          <span style={{ fontSize: '11px', color: '#666', fontWeight: 'bold', textTransform: 'uppercase' }}>Active Sessions</span>
+          <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#8B4513', marginTop: '4px' }}>{users.length} Users Tracked</div>
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '24px', marginBottom: '24px' }}>
         
         {/* ADD USER CARD */}
-        <div style={{ background: '#FFF', padding: '24px', borderRadius: '8px', border: '1px solid #EAE6DF' }}>
-          <h3 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Key size={18} color="#8B4513" /> Provision User Access
+        <div style={{ background: '#FFF', padding: '24px', borderRadius: '8px', border: '1px solid #EAE6DF', height: 'fit-content' }}>
+          <h3 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px', color: '#8B4513' }}>
+            <Key size={18} /> Provision User Access
           </h3>
           <form onSubmit={handleAddUser}>
             <div style={{ marginBottom: '14px' }}>
@@ -67,21 +106,21 @@ export default function AdminConsole() {
             <div style={{ marginBottom: '20px' }}>
               <label style={{ display: 'block', fontSize: '12px', fontWeight: 'bold', marginBottom: '4px', color: '#666' }}>Role Assignment</label>
               <select value={selectedRole} onChange={(e) => setSelectedRole(e.target.value)} style={{ width: '100%', padding: '8px', border: '1px solid #CCC', borderRadius: '4px', fontSize: '13px' }}>
-                <option value="Super Admin">Super Admin (Full Access + Export + Column Customizer)</option>
+                <option value="Super Admin">Super Admin (Full Control)</option>
                 <option value="Control Tower Manager">Control Tower Manager (View + Export)</option>
-                <option value="Viewer">Viewer (Read-Only KPI & Data View)</option>
+                <option value="Viewer">Viewer (Read-Only Access)</option>
               </select>
             </div>
             <button type="submit" style={{ width: '100%', background: '#8B4513', color: '#FFF', border: 'none', padding: '10px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}>
-              <Save size={16} /> Save User Permissions
+              Save User Permissions
             </button>
           </form>
         </div>
 
-        {/* ACTIVE USERS MATRIX LIST */}
+        {/* ACCESS CONTROL MATRIX LIST */}
         <div style={{ background: '#FFF', padding: '24px', borderRadius: '8px', border: '1px solid #EAE6DF' }}>
-          <h3 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Users size={18} color="#8B4513" /> Active Platform Users
+          <h3 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px', color: '#8B4513' }}>
+            <Users size={18} /> Active Platform Users
           </h3>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', textAlign: 'left' }}>
             <thead>
@@ -119,8 +158,31 @@ export default function AdminConsole() {
             </tbody>
           </table>
         </div>
-
       </div>
+
+      {/* GLOBAL SCHEMA SCHEMA MANAGER */}
+      <div style={{ background: '#FFF', padding: '24px', borderRadius: '8px', border: '1px solid #EAE6DF' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <h3 style={{ fontSize: '16px', fontWeight: 'bold', margin: 0, display: 'flex', alignItems: 'center', gap: '8px', color: '#8B4513' }}>
+            <Sliders size={18} /> Global Export Customizer Blueprint
+          </h3>
+          <button onClick={handleSaveBlueprint} style={{ background: '#10B981', color: '#FFF', border: 'none', padding: '8px 16px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}>
+            Lock Template Blueprint
+          </button>
+        </div>
+        <p style={{ fontSize: '12px', color: '#666', margin: '0 0 16px 0' }}>
+          অ্যাডমিন হিসেবে এখান থেকে ডিফল্ট ২৭ কলাম ট্র্যাকিং স্কিমার সিকিউরিটি কনফিগারেশন সেট করতে পারবেন। ইউজাররা এক্সপোর্ট করার সময় কোন কোন ফিল্ড অটো-লক থাকবে তা এখান থেকে নির্ধারিত হবে।
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', background: '#FAFAFA', padding: '16px', borderRadius: '6px' }}>
+          {masterColumns.map(col => (
+            <div key={col.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px', background: '#FFF', borderRadius: '4px', border: '1px solid #DDD', fontSize: '12px' }}>
+              <span style={{ fontWeight: '600' }}>{col.label}</span>
+              <span style={{ color: '#0F766E', background: '#CCFBF1', padding: '2px 8px', borderRadius: '10px', fontSize: '10px', fontWeight: 'bold' }}>{col.status}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
     </div>
   );
 }
